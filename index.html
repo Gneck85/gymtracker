@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+<title>GUS Training Log</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { font-size: 16px; }
+  body { background: #0a0a0a; color: #e8e8e8; font-family: 'DM Mono', monospace; min-height: 100vh; max-width: 600px; margin: 0 auto; }
+
+  #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 12px; }
+  #loading span { font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 4px; color: #ff4d00; }
+  #loading small { font-size: 12px; color: #444; }
+
+  .header { background: #0d0d0d; border-bottom: 1px solid #1a1a1a; padding: 20px 20px 0; position: sticky; top: 0; z-index: 10; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
+  .logo-title { font-family: 'Bebas Neue'; font-size: 42px; letter-spacing: 4px; color: #ff4d00; line-height: 1; }
+  .logo-sub { font-family: 'Bebas Neue'; font-size: 18px; letter-spacing: 3px; color: #444; }
+  .next-day-box { background: #1a1a1a; border: 1px solid #222; border-radius: 10px; padding: 8px 14px; text-align: right; }
+  .next-day-box.hoy { background: #ff4d0022; border-color: #ff4d0066; }
+  .next-label { font-size: 11px; color: #555; letter-spacing: 1px; }
+  .next-label.hoy { color: #ff4d00; }
+  .next-name { font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 2px; color: #888; }
+  .next-name.hoy { color: #ff4d00; }
+  .saving-indicator { font-size: 11px; color: #ff4d00; letter-spacing: 1px; margin-bottom: 4px; min-height: 15px; text-align: right; }
+
+  .vista-tabs { display: flex; gap: 4px; }
+  .vista-tab { padding: 10px 18px; background: none; border: none; cursor: pointer; font-family: 'DM Mono'; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 8px 8px 0 0; color: #555; }
+  .vista-tab.active { background: #ff4d00; color: #fff; }
+
+  .semana-bar { padding: 14px 20px 12px; display: flex; gap: 10px; flex-wrap: nowrap; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .semana-bar::-webkit-scrollbar { display: none; }
+  .semana-label { font-size: 12px; color: #444; letter-spacing: 1px; white-space: nowrap; }
+  .semana-btn { background: #111; border: 1px solid #222; color: #888; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-family: 'DM Mono'; font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+  .semana-btn.active { border-color: #ff4d00; color: #ff4d00; background: #ff4d0011; }
+
+  .dia-tabs { display: flex; padding: 0 20px; border-bottom: 1px solid #1a1a1a; }
+  .dia-tab { flex: 1; padding: 12px 4px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 1px; color: #444; text-align: center; }
+  .dia-tab.active { color: #ff4d00; border-bottom-color: #ff4d00; }
+  .dia-tab-count { display: block; font-family: 'DM Mono'; font-size: 11px; color: #555; margin-top: 2px; }
+  .dia-tab-count.completo { color: #ff4d00; }
+
+  .content { padding: 20px; }
+  .dia-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .dia-title { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 2px; color: #ccc; }
+  .dia-count { font-family: 'Bebas Neue'; font-size: 28px; color: #555; }
+  .dia-count.completo { color: #ff4d00; }
+  .readonly-banner { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 16px; margin-bottom: 16px; font-size: 13px; color: #666; }
+
+  .progress-bg { background: #1a1a1a; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: #ff4d00; border-radius: 3px; transition: width 0.4s; }
+
+  .bloque-title { font-size: 11px; letter-spacing: 2px; color: #ff4d00; text-transform: uppercase; margin-bottom: 10px; }
+  .bloque { margin-bottom: 24px; }
+
+  .ej-card { background: #111; border: 1px solid #1e1e1e; border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+  .ej-card.done { border-color: #ff4d0033; background: #110a00; }
+  .ej-inner { display: flex; align-items: flex-start; gap: 14px; }
+
+  .check-box {
+    width: 52px; height: 52px; border-radius: 12px;
+    border: 2px solid #333; background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 24px; color: #fff; min-width: 52px;
+  }
+  .check-box.done { background: #ff4d00; border-color: #ff4d00; }
+  .check-box:disabled { opacity: 0.4; }
+
+  .ej-body { flex: 1; min-width: 0; }
+  .ej-nombre { font-size: 15px; color: #e8e8e8; margin-bottom: 6px; line-height: 1.4; }
+  .ej-nombre.done { color: #555; text-decoration: line-through; }
+  .superserie-badge { display: inline-block; background: #ff4d0022; color: #ff4d00; border: 1px solid #ff4d0044; padding: 2px 8px; border-radius: 20px; font-size: 10px; letter-spacing: 1px; margin-left: 6px; vertical-align: middle; }
+  .ej-meta { font-size: 13px; color: #555; margin-bottom: 10px; line-height: 1.6; }
+  .ej-meta-accent { color: #ff4d0099; }
+  .ej-ref { font-size: 12px; color: #333; display: block; margin-top: 3px; }
+
+  .peso-row { display: flex; align-items: center; gap: 10px; }
+  .peso-label { font-size: 13px; color: #444; white-space: nowrap; }
+  .peso-input {
+    background: #1a1a1a; border: 1px solid #2a2a2a; color: #e8e8e8;
+    padding: 12px 14px; border-radius: 10px; font-family: 'DM Mono';
+    font-size: 16px; width: 150px; -webkit-appearance: none;
+  }
+  .peso-input:focus { outline: none; border-color: #ff4d00; }
+  .peso-input:disabled { opacity: 0.35; }
+
+  .hist-title { font-family: 'Bebas Neue'; font-size: 26px; letter-spacing: 3px; color: #ccc; margin-bottom: 18px; }
+  .hist-card { background: #111; border: 1px solid #1e1e1e; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .hist-week-label { font-size: 15px; color: #888; }
+  .hist-week-label.current { color: #ff4d00; }
+  .hist-week-key { font-size: 11px; color: #333; margin-top: 2px; margin-bottom: 14px; }
+  .hist-dia-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 13px; color: #666; }
+  .hist-dia-done { color: #444; }
+  .hist-dia-done.completo { color: #ff4d00; }
+  .hist-pesos { background: #0d0d0d; border-radius: 10px; padding: 10px 12px; margin-top: 8px; margin-bottom: 10px; }
+  .hist-peso-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #161616; font-size: 12px; gap: 8px; }
+  .hist-peso-nombre { color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .hist-peso-val { color: #ff4d0099; white-space: nowrap; }
+  .empty-msg { text-align: center; color: #333; font-size: 15px; margin-top: 60px; }
+  .pb-safe { height: 50px; }
+  .error-msg { background: #1a0000; border: 1px solid #ff000033; border-radius: 10px; padding: 12px 16px; margin: 20px; font-size: 13px; color: #ff6666; }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <span>CARGANDO...</span>
+  <small>conectando con Google Sheets</small>
+</div>
+<div id="app" style="display:none"></div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbx1uwWuhQRDijpDxEEYJDgoIxbzPm0hVeUy_n3NzQvJBf3TRy7aiNil14ZZeWhhM_ycug/exec";
+
+const DIAS = ["Lunes", "Miercoles", "Viernes"];
+const DIAS_LABEL = { Lunes: "Lunes", Miercoles: "Miércoles", Viernes: "Viernes" };
+
+let RUTINA = {};
+let allWeeks = [];
+let sesionesCache = {};
+let currentWeek = "";
+let semanaActiva = "";
+let diaActivo = "Lunes";
+let vista = "rutina";
+
+function getWeekKey() {
+  const now = new Date();
+  const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
+}
+
+function formatWeekLabel(key) {
+  try {
+    const [year, weekPart] = key.split("-W");
+    const week = parseInt(weekPart);
+    const jan4 = new Date(parseInt(year), 0, 4);
+    const s = new Date(jan4);
+    s.setDate(jan4.getDate() - (jan4.getDay() || 7) + 1 + (week - 1) * 7);
+    const e = new Date(s); e.setDate(s.getDate() + 6);
+    const fmt = d => d.toLocaleDateString("es-AR", { day: "numeric", month: "short" });
+    return `${fmt(s)} – ${fmt(e)}`;
+  } catch { return key; }
+}
+
+function getProximoDia() {
+  const today = new Date().getDay();
+  const gymDays = [
+    { day: 1, nombre: "Lunes" },
+    { day: 3, nombre: "Miercoles" },
+    { day: 5, nombre: "Viernes" }
+  ];
+  for (let i = 0; i <= 7; i++) {
+    const check = (today + i) % 7;
+    const found = gymDays.find(g => g.day === check);
+    if (found) return { dia: found.nombre, hoy: i === 0 };
+  }
+  return null;
+}
+
+function cacheKey(week, dia) { return `${week}-${dia}`; }
+function getCheck(week, dia, id) { return sesionesCache[cacheKey(week, dia)]?.[id]?.check || false; }
+function getPeso(week, dia, id) { return sesionesCache[cacheKey(week, dia)]?.[id]?.peso || ""; }
+
+function getProgress(week, dia) {
+  if (!RUTINA[dia]) return { total: 0, done: 0 };
+  let total = 0, done = 0;
+  RUTINA[dia].bloques.forEach(b => b.ejercicios.forEach(e => {
+    total++;
+    if (getCheck(week, dia, e.id)) done++;
+  }));
+  return { total, done };
+}
+
+async function apiFetch(params) {
+  const url = API + "?" + new URLSearchParams(params);
+  const res = await fetch(url);
+  return res.json();
+}
+
+async function apiPost(body) {
+  const res = await fetch(API, {
+    method: "POST",
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+async function loadSesion(week, dia) {
+  const k = cacheKey(week, dia);
+  if (sesionesCache[k] !== undefined) return;
+  sesionesCache[k] = {};
+  try {
+    const data = await apiFetch({ action: "getSesion", week, dia });
+    sesionesCache[k] = data || {};
+  } catch(e) { console.error(e); }
+}
+
+function showSaving(show) {
+  const el = document.getElementById("saving-indicator");
+  if (el) el.textContent = show ? "GUARDANDO..." : "";
+}
+
+function render() {
+  document.getElementById("app").innerHTML = buildApp();
+}
+
+function buildApp() {
+  const proximo = getProximoDia();
+  return `
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="logo-title">GUS</div>
+          <div class="logo-sub">TRAINING LOG</div>
+        </div>
+        <div style="text-align:right">
+          <div class="saving-indicator" id="saving-indicator"></div>
+          ${proximo ? `
+          <div class="next-day-box ${proximo.hoy ? 'hoy' : ''}">
+            <div class="next-label ${proximo.hoy ? 'hoy' : ''}">${proximo.hoy ? '⚡ HOY TOCA' : 'PRÓXIMO DÍA'}</div>
+            <div class="next-name ${proximo.hoy ? 'hoy' : ''}">${RUTINA[proximo.dia]?.emoji || ''} ${DIAS_LABEL[proximo.dia]}</div>
+          </div>` : ''}
+        </div>
+      </div>
+      <div class="vista-tabs">
+        <button class="vista-tab ${vista === 'rutina' ? 'active' : ''}" onclick="switchVista('rutina')">📋 Rutina</button>
+        <button class="vista-tab ${vista === 'historial' ? 'active' : ''}" onclick="switchVista('historial')">📊 Historial</button>
+      </div>
+    </div>
+    ${vista === 'rutina' ? buildRutina() : buildHistorial()}
+    <div class="pb-safe"></div>
+  `;
+}
+
+function buildRutina() {
+  const isCurrentWeek = semanaActiva === currentWeek;
+  const dia = RUTINA[diaActivo];
+  if (!dia) return '<div class="content"><div class="empty-msg">Cargando...</div></div>';
+  const { total, done } = getProgress(semanaActiva, diaActivo);
+  const pct = total > 0 ? (done / total) * 100 : 0;
+
+  const semanaBtns = allWeeks.slice(0, 5).map(w => `
+    <button class="semana-btn ${semanaActiva === w ? 'active' : ''}" onclick="switchSemana('${w}')">
+      ${w === currentWeek ? 'Esta semana' : formatWeekLabel(w)}
+    </button>`).join('');
+
+  const diaTabs = DIAS.map(d => {
+    const { total: t, done: dn } = getProgress(semanaActiva, d);
+    return `<button class="dia-tab ${diaActivo === d ? 'active' : ''}" onclick="switchDia('${d}')">
+      ${DIAS_LABEL[d]}
+      <span class="dia-tab-count ${dn > 0 && dn === t ? 'completo' : ''}">${dn > 0 ? dn+'/'+t : ' '}</span>
+    </button>`;
+  }).join('');
+
+  const bloques = dia.bloques.map(bloque => {
+    const ejercicios = bloque.ejercicios.map(ej => {
+      const checked = getCheck(semanaActiva, diaActivo, ej.id);
+      const peso = getPeso(semanaActiva, diaActivo, ej.id);
+      return `
+        <div class="ej-card ${checked ? 'done' : ''}">
+          <div class="ej-inner">
+            <button class="check-box ${checked ? 'done' : ''}" ${!isCurrentWeek ? 'disabled' : ''} onclick="toggleCheck('${ej.id}')">
+              ${checked ? '✓' : ''}
+            </button>
+            <div class="ej-body">
+              <div class="ej-nombre ${checked ? 'done' : ''}">
+                ${ej.nombre}${ej.superserie ? '<span class="superserie-badge">SS</span>' : ''}
+              </div>
+              <div class="ej-meta">
+                <span class="ej-meta-accent">${ej.series} series</span> · ${ej.reps}
+                <span class="ej-ref">ref: ${ej.pesoRef}</span>
+              </div>
+              <div class="peso-row">
+                <span class="peso-label">Peso:</span>
+                <input class="peso-input" placeholder="${isCurrentWeek ? 'ej: 12 kg' : '—'}"
+                  value="${peso}" ${!isCurrentWeek ? 'disabled' : ''}
+                  onchange="updatePeso('${ej.id}', this.value)">
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div class="bloque"><div class="bloque-title">${bloque.nombre}</div>${ejercicios}</div>`;
+  }).join('');
+
+  return `
+    <div class="semana-bar">
+      <span class="semana-label">SEMANA:</span>${semanaBtns}
+    </div>
+    <div class="dia-tabs">${diaTabs}</div>
+    <div class="content">
+      <div class="dia-header">
+        <div><span style="font-size:26px;margin-right:8px">${dia.emoji}</span><span class="dia-title">${dia.label}</span></div>
+        <span class="dia-count ${pct === 100 ? 'completo' : ''}">${done}/${total}</span>
+      </div>
+      ${!isCurrentWeek ? '<div class="readonly-banner">📖 Modo lectura — semana pasada</div>' : ''}
+      <div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div>
+      ${bloques}
+    </div>`;
+}
+
+function buildHistorial() {
+  if (allWeeks.length === 0) return `<div class="content"><div class="empty-msg">Acá vas a ver el historial una vez que empieces a registrar.</div></div>`;
+  const cards = allWeeks.map(week => {
+    const diasHtml = DIAS.map(dia => {
+      const { total, done } = getProgress(week, dia);
+      const pct = total > 0 ? (done / total) * 100 : 0;
+      const sesion = sesionesCache[cacheKey(week, dia)] || {};
+      const hasData = Object.keys(sesion).length > 0;
+      let pesosHtml = '';
+      if (hasData && RUTINA[dia]) {
+        let rows = '';
+        RUTINA[dia].bloques.forEach(b => b.ejercicios.forEach(ej => {
+          const d = sesion[ej.id];
+          if (!d) return;
+          const nombre = ej.nombre.length > 35 ? ej.nombre.substring(0, 35) + '…' : ej.nombre;
+          rows += `<div class="hist-peso-row">
+            <span class="hist-peso-nombre" style="${d.check ? 'text-decoration:line-through' : ''}">${nombre}</span>
+            <span class="hist-peso-val">${d.peso || (d.check ? '✓' : '—')}</span>
+          </div>`;
+        }));
+        if (rows) pesosHtml = `<div class="hist-pesos">${rows}</div>`;
+      }
+      return `<div style="margin-bottom:12px">
+        <div class="hist-dia-label">
+          <span>${RUTINA[dia]?.emoji || ''} ${DIAS_LABEL[dia]}</span>
+          <span class="hist-dia-done ${done === total && total > 0 ? 'completo' : ''}">${done}/${total}${done === total && total > 0 ? ' ✓' : ''}</span>
+        </div>
+        <div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div>
+        ${pesosHtml}
+      </div>`;
+    }).join('');
+    return `<div class="hist-card">
+      <div class="hist-week-label ${week === currentWeek ? 'current' : ''}">${week === currentWeek ? '⚡ Esta semana' : formatWeekLabel(week)}</div>
+      <div class="hist-week-key">${week}</div>
+      ${diasHtml}
+    </div>`;
+  }).join('');
+  return `<div class="content"><div class="hist-title">📊 HISTORIAL</div>${cards}</div>`;
+}
+
+async function switchVista(v) {
+  vista = v;
+  if (v === 'historial') {
+    for (const w of allWeeks) for (const d of DIAS) await loadSesion(w, d);
+  }
+  render();
+}
+
+async function switchSemana(w) {
+  semanaActiva = w;
+  for (const d of DIAS) await loadSesion(w, d);
+  render();
+}
+
+async function switchDia(d) {
+  diaActivo = d;
+  await loadSesion(semanaActiva, d);
+  render();
+}
+
+async function toggleCheck(ejId) {
+  const current = getCheck(semanaActiva, diaActivo, ejId);
+  const peso = getPeso(semanaActiva, diaActivo, ejId);
+  const k = cacheKey(semanaActiva, diaActivo);
+  if (!sesionesCache[k]) sesionesCache[k] = {};
+  sesionesCache[k][ejId] = { check: !current, peso };
+  render();
+  showSaving(true);
+  await apiPost({ week: semanaActiva, dia: diaActivo, ejercicioId: ejId, check: !current, peso });
+  showSaving(false);
+}
+
+async function updatePeso(ejId, valor) {
+  const check = getCheck(semanaActiva, diaActivo, ejId);
+  const k = cacheKey(semanaActiva, diaActivo);
+  if (!sesionesCache[k]) sesionesCache[k] = {};
+  sesionesCache[k][ejId] = { check, peso: valor };
+  showSaving(true);
+  await apiPost({ week: semanaActiva, dia: diaActivo, ejercicioId: ejId, check, peso: valor });
+  showSaving(false);
+}
+
+async function init() {
+  currentWeek = getWeekKey();
+  semanaActiva = currentWeek;
+
+  try {
+    RUTINA = await apiFetch({ action: "getRutina" });
+    const weeks = await apiFetch({ action: "getAllWeeks" });
+    allWeeks = weeks.length ? weeks : [];
+    if (!allWeeks.includes(currentWeek)) allWeeks.unshift(currentWeek);
+  } catch(e) {
+    document.getElementById("loading").innerHTML = '<div class="error-msg">Error conectando con Google Sheets. Revisá tu conexión e intentá de nuevo.</div>';
+    return;
+  }
+
+  const proximo = getProximoDia();
+  if (proximo) diaActivo = proximo.dia;
+
+  await loadSesion(currentWeek, diaActivo);
+
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
