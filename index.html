@@ -182,16 +182,23 @@ function getProgress(week, dia) {
 
 async function apiFetch(params) {
   const url = API + "?" + new URLSearchParams(params);
-  const res = await fetch(url);
-  return res.json();
+  const res = await fetch(url, {
+    method: "GET",
+    redirect: "follow"
+  });
+  const text = await res.text();
+  return JSON.parse(text);
 }
 
 async function apiPost(body) {
   const res = await fetch(API, {
     method: "POST",
+    redirect: "follow",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(body)
   });
-  return res.json();
+  const text = await res.text();
+  return JSON.parse(text);
 }
 
 async function loadSesion(week, dia) {
@@ -201,7 +208,7 @@ async function loadSesion(week, dia) {
   try {
     const data = await apiFetch({ action: "getSesion", week, dia });
     sesionesCache[k] = data || {};
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error("loadSesion error", e); }
 }
 
 function showSaving(show) {
@@ -397,10 +404,11 @@ async function init() {
   try {
     RUTINA = await apiFetch({ action: "getRutina" });
     const weeks = await apiFetch({ action: "getAllWeeks" });
-    allWeeks = weeks.length ? weeks : [];
+    allWeeks = Array.isArray(weeks) ? weeks : [];
     if (!allWeeks.includes(currentWeek)) allWeeks.unshift(currentWeek);
   } catch(e) {
-    document.getElementById("loading").innerHTML = '<div class="error-msg">Error conectando con Google Sheets. Revisá tu conexión e intentá de nuevo.</div>';
+    console.error("init error", e);
+    document.getElementById("loading").innerHTML = '<div class="error-msg">❌ Error conectando con Google Sheets.<br><br>Revisá tu conexión e intentá de nuevo.</div>';
     return;
   }
 
