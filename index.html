@@ -12,90 +12,70 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html { font-size: 16px; }
   body { background: #0a0a0a; color: #e8e8e8; font-family: 'DM Mono', monospace; min-height: 100vh; max-width: 600px; margin: 0 auto; }
-
   #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 12px; }
   #loading span { font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 4px; color: #ff4d00; }
   #loading small { font-size: 12px; color: #444; }
-
   .header { background: #0d0d0d; border-bottom: 1px solid #1a1a1a; padding: 20px 20px 0; position: sticky; top: 0; z-index: 10; }
   .header-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
   .logo-title { font-family: 'Bebas Neue'; font-size: 42px; letter-spacing: 4px; color: #ff4d00; line-height: 1; }
   .logo-sub { font-family: 'Bebas Neue'; font-size: 18px; letter-spacing: 3px; color: #444; }
-  .next-day-box { background: #1a1a1a; border: 1px solid #222; border-radius: 10px; padding: 8px 14px; text-align: right; }
-  .next-day-box.hoy { background: #ff4d0022; border-color: #ff4d0066; }
-  .next-label { font-size: 11px; color: #555; letter-spacing: 1px; }
-  .next-label.hoy { color: #ff4d00; }
-  .next-name { font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 2px; color: #888; }
-  .next-name.hoy { color: #ff4d00; }
+  .next-day-box { background: #ff4d0022; border: 1px solid #ff4d0066; border-radius: 10px; padding: 8px 14px; text-align: right; }
+  .next-label { font-size: 11px; color: #ff4d00; letter-spacing: 1px; }
+  .next-name { font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 2px; color: #ff4d00; }
   .saving-indicator { font-size: 11px; color: #ff4d00; letter-spacing: 1px; margin-bottom: 4px; min-height: 15px; text-align: right; }
-
   .vista-tabs { display: flex; gap: 4px; }
   .vista-tab { padding: 10px 18px; background: none; border: none; cursor: pointer; font-family: 'DM Mono'; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 8px 8px 0 0; color: #555; }
   .vista-tab.active { background: #ff4d00; color: #fff; }
-
   .semana-bar { padding: 14px 20px 12px; display: flex; gap: 10px; flex-wrap: nowrap; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .semana-bar::-webkit-scrollbar { display: none; }
   .semana-label { font-size: 12px; color: #444; letter-spacing: 1px; white-space: nowrap; }
   .semana-btn { background: #111; border: 1px solid #222; color: #888; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-family: 'DM Mono'; font-size: 12px; white-space: nowrap; flex-shrink: 0; }
   .semana-btn.active { border-color: #ff4d00; color: #ff4d00; background: #ff4d0011; }
-
   .dia-tabs { display: flex; padding: 0 20px; border-bottom: 1px solid #1a1a1a; }
   .dia-tab { flex: 1; padding: 12px 4px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 1px; color: #444; text-align: center; }
   .dia-tab.active { color: #ff4d00; border-bottom-color: #ff4d00; }
   .dia-tab-count { display: block; font-family: 'DM Mono'; font-size: 11px; color: #555; margin-top: 2px; }
   .dia-tab-count.completo { color: #ff4d00; }
-
   .content { padding: 20px; }
   .dia-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .dia-title { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 2px; color: #ccc; }
   .dia-count { font-family: 'Bebas Neue'; font-size: 28px; color: #555; }
   .dia-count.completo { color: #ff4d00; }
-  .readonly-banner { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 16px; margin-bottom: 16px; font-size: 13px; color: #666; }
-
+  .banner { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 16px; margin-bottom: 16px; font-size: 13px; color: #888; line-height: 1.5; }
+  .banner.pausa { background: #1a1400; border-color: #ffb30044; color: #ffb300; }
   .progress-bg { background: #1a1a1a; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 20px; }
   .progress-fill { height: 100%; background: #ff4d00; border-radius: 3px; transition: width 0.4s; }
-
   .bloque-title { font-size: 11px; letter-spacing: 2px; color: #ff4d00; text-transform: uppercase; margin-bottom: 10px; }
   .bloque { margin-bottom: 24px; }
-
   .ej-card { background: #111; border: 1px solid #1e1e1e; border-radius: 14px; padding: 18px; margin-bottom: 12px; }
   .ej-card.done { border-color: #ff4d0033; background: #110a00; }
+  .ej-card.pausado { opacity: 0.45; border-style: dashed; }
   .ej-inner { display: flex; align-items: flex-start; gap: 14px; }
-
-  .check-box {
-    width: 52px; height: 52px; border-radius: 12px;
-    border: 2px solid #333; background: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 24px; color: #fff; min-width: 52px;
-  }
+  .check-box { width: 52px; height: 52px; border-radius: 12px; border: 2px solid #333; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 24px; color: #fff; min-width: 52px; }
   .check-box.done { background: #ff4d00; border-color: #ff4d00; }
   .check-box:disabled { opacity: 0.4; }
-
+  .pausa-icon { width: 52px; height: 52px; min-width: 52px; border-radius: 12px; border: 2px dashed #ffb30066; display: flex; align-items: center; justify-content: center; font-size: 22px; }
   .ej-body { flex: 1; min-width: 0; }
   .ej-nombre { font-size: 15px; color: #e8e8e8; margin-bottom: 6px; line-height: 1.4; }
   .ej-nombre.done { color: #555; text-decoration: line-through; }
-  .superserie-badge { display: inline-block; background: #ff4d0022; color: #ff4d00; border: 1px solid #ff4d0044; padding: 2px 8px; border-radius: 20px; font-size: 10px; letter-spacing: 1px; margin-left: 6px; vertical-align: middle; }
+  .ss-badge { display: inline-block; background: #ff4d0022; color: #ff4d00; border: 1px solid #ff4d0044; padding: 2px 8px; border-radius: 20px; font-size: 10px; letter-spacing: 1px; margin-left: 6px; vertical-align: middle; }
   .ej-meta { font-size: 13px; color: #555; margin-bottom: 10px; line-height: 1.6; }
   .ej-meta-accent { color: #ff4d0099; }
-  .ej-ref { font-size: 12px; color: #333; display: block; margin-top: 3px; }
-
+  .ej-ref { font-size: 12px; color: #555; display: block; margin-top: 3px; }
+  .ej-nota { font-size: 12px; color: #ffb300; margin-bottom: 10px; }
+  .pausa-txt { font-size: 13px; color: #ffb300; }
   .peso-row { display: flex; align-items: center; gap: 10px; }
   .peso-label { font-size: 13px; color: #444; white-space: nowrap; }
-  .peso-input {
-    background: #1a1a1a; border: 1px solid #2a2a2a; color: #e8e8e8;
-    padding: 12px 14px; border-radius: 10px; font-family: 'DM Mono';
-    font-size: 16px; width: 150px; -webkit-appearance: none;
-  }
+  .peso-input { background: #1a1a1a; border: 1px solid #2a2a2a; color: #e8e8e8; padding: 12px 14px; border-radius: 10px; font-family: 'DM Mono'; font-size: 16px; width: 150px; -webkit-appearance: none; }
   .peso-input:focus { outline: none; border-color: #ff4d00; }
   .peso-input:disabled { opacity: 0.35; }
-
   .hist-title { font-family: 'Bebas Neue'; font-size: 26px; letter-spacing: 3px; color: #ccc; margin-bottom: 18px; }
   .hist-card { background: #111; border: 1px solid #1e1e1e; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
   .hist-week-label { font-size: 15px; color: #888; }
   .hist-week-label.current { color: #ff4d00; }
   .hist-week-key { font-size: 11px; color: #333; margin-top: 2px; margin-bottom: 14px; }
-  .hist-dia-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 13px; color: #666; }
-  .hist-dia-done { color: #444; }
+  .hist-dia-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 13px; color: #666; gap: 8px; }
+  .hist-dia-done { color: #444; white-space: nowrap; }
   .hist-dia-done.completo { color: #ff4d00; }
   .hist-pesos { background: #0d0d0d; border-radius: 10px; padding: 10px 12px; margin-top: 8px; margin-bottom: 10px; }
   .hist-peso-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #161616; font-size: 12px; gap: 8px; }
@@ -117,16 +97,104 @@
 <script>
 const API = "https://script.google.com/macros/s/AKfycbx1uwWuhQRDijpDxEEYJDgoIxbzPm0hVeUy_n3NzQvJBf3TRy7aiNil14ZZeWhhM_ycug/exec";
 
-const DIAS = ["Lunes", "Miercoles", "Viernes"];
-const DIAS_LABEL = { Lunes: "Lunes", Miercoles: "Miércoles", Viernes: "Viernes" };
+// ===== PAUSAS =====
+// Ejercicios de una zona que no se hacen una semana determinada.
+// Para extender la pausa, agregá otra línea con la semana siguiente (ej: "2026-W45").
+const PAUSAS = [
+  { semana: "2026-W44", zona: "espalda", motivo: "contractura en el omóplato" },
+];
 
-let RUTINA = {};
+// ===== RUTINA (noviembre 2026) =====
+// ss = letra de superserie: los ejercicios con la misma letra se hacen uno atrás del otro.
+const RUTINA = {
+  Lunes: {
+    label: "PECHO + ESPALDA",
+    emoji: "💪",
+    bloques: [
+      { nombre: "Superserie A — fuerza · 90 seg al terminar la vuelta", ejercicios: [
+        { id: "L1", nombre: "Press plano con mancuernas", series: 4, reps: "8 reps", pesoRef: "20 kg c/u", ss: "A" },
+        { id: "L2", nombre: "Jalón al pecho agarre neutro (triángulo)", series: 4, reps: "8 reps", pesoRef: "40 kg", ss: "A", zona: "espalda" },
+      ]},
+      { nombre: "Superserie B — volumen · 75 seg", ejercicios: [
+        { id: "L3", nombre: "Press inclinado en máquina convergente", series: 3, reps: "10 reps", pesoRef: "15 kg x lado", ss: "B" },
+        { id: "L4", nombre: "Remo con pecho apoyado en banco inclinado", series: 3, reps: "10 reps", pesoRef: "14 kg c/u", ss: "B", zona: "espalda" },
+      ]},
+      { nombre: "Superserie C — bombeo · 60 seg", ejercicios: [
+        { id: "L5", nombre: "Cruce de polea alto → bajo", series: 3, reps: "12 reps", pesoRef: "10 kg x lado", ss: "C" },
+        { id: "L6", nombre: "Pullover en polea alta con soga", series: 3, reps: "12 reps", pesoRef: "15 kg", ss: "C", zona: "espalda" },
+      ]},
+      { nombre: "Core · 30 seg", ejercicios: [
+        { id: "L7", nombre: "Pallof press", series: 3, reps: "10 c/lado", pesoRef: "7.5 kg", ss: "D" },
+        { id: "L8", nombre: "Dead bug", series: 3, reps: "10 c/lado", pesoRef: "—", ss: "D" },
+      ]},
+    ]
+  },
+  Miercoles: {
+    label: "PIERNAS + CORE",
+    emoji: "🦵",
+    bloques: [
+      { nombre: "Activación — 5 min", ejercicios: [
+        { id: "M0", nombre: "Movilidad cadera/tobillo + caminata lateral con banda", series: 1, reps: "5 min + 2x15 pasos", pesoRef: "banda media" },
+      ]},
+      { nombre: "Principal · 90 seg", ejercicios: [
+        { id: "M1", nombre: "Prensa (pausa 1 seg abajo)", series: 4, reps: "10 reps", pesoRef: "70 kg" },
+      ]},
+      { nombre: "Superserie A · 75 seg", ejercicios: [
+        { id: "M2", nombre: "Sentadilla búlgara con mancuernas", series: 3, reps: "8 c/pierna", pesoRef: "8 kg c/u", ss: "A" },
+        { id: "M3", nombre: "Camilla isquiotibiales", series: 3, reps: "12 reps", pesoRef: "4 ladrillos", ss: "A" },
+      ]},
+      { nombre: "Superserie B · 75 seg", ejercicios: [
+        { id: "M4", nombre: "Hip thrust", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
+        { id: "M5", nombre: "Extensión de cuádriceps (pausa arriba)", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
+      ]},
+      { nombre: "Superserie C · 45 seg", ejercicios: [
+        { id: "M6", nombre: "Gemelo en prensa", series: 3, reps: "15 reps", pesoRef: "60 kg", ss: "C" },
+        { id: "M7", nombre: "Plancha lateral con elevación de cadera", series: 3, reps: "10 c/lado", pesoRef: "—", ss: "C" },
+      ]},
+    ]
+  },
+  Viernes: {
+    label: "HOMBROS + BRAZOS",
+    emoji: "🔥",
+    bloques: [
+      { nombre: "Superserie A — hombro sano · 60 seg", ejercicios: [
+        { id: "V1", nombre: "Press landmine a 1 brazo (barra en esquina)", series: 3, reps: "10 c/brazo", pesoRef: "barra + 5 kg", ss: "A", nota: "Si te tira en el omóplato, lo dejás." },
+        { id: "V2", nombre: "Face pull", series: 3, reps: "15 reps", pesoRef: "12.5 kg", ss: "A", zona: "espalda" },
+      ]},
+      { nombre: "Superserie B · 60 seg", ejercicios: [
+        { id: "V3", nombre: "Elevación lateral en polea baja a 1 brazo", series: 3, reps: "12 c/brazo", pesoRef: "5 kg", ss: "B" },
+        { id: "V4", nombre: "Pájaro en peck deck invertido", series: 3, reps: "15 reps", pesoRef: "15 kg", ss: "B", zona: "espalda" },
+      ]},
+      { nombre: "Superserie C — brazos · 60 seg", ejercicios: [
+        { id: "V5", nombre: "Curl inclinado con mancuernas (banco 45°)", series: 3, reps: "10 reps", pesoRef: "8 kg c/u", ss: "C" },
+        { id: "V6", nombre: "Press francés con barra Z", series: 3, reps: "10 reps", pesoRef: "12.5 kg", ss: "C" },
+      ]},
+      { nombre: "Superserie D — brazos · 60 seg", ejercicios: [
+        { id: "V7", nombre: "Curl martillo en polea con soga", series: 3, reps: "12 reps", pesoRef: "10 kg", ss: "D" },
+        { id: "V8", nombre: "Tríceps en polea con barra V", series: 3, reps: "12 reps", pesoRef: "15 kg", ss: "D" },
+      ]},
+      { nombre: "Final", ejercicios: [
+        { id: "V9", nombre: "Paseo del granjero", series: 3, reps: "30-40 m", pesoRef: "16 kg c/u", zona: "espalda" },
+      ]},
+    ]
+  }
+};
+
+const DIAS = ["Lunes", "Miercoles", "Viernes"];
+const DIAS_LABEL = { Lunes: "Día 1", Miercoles: "Día 2", Viernes: "Día 3" };
+
 let allWeeks = [];
 let sesionesCache = {};
 let currentWeek = "";
 let semanaActiva = "";
 let diaActivo = "Lunes";
 let vista = "rutina";
+let pendientes = 0;
+let saveChain = Promise.resolve();
+
+function esc(s) {
+  return String(s ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
 
 function getWeekKey() {
   const now = new Date();
@@ -151,40 +219,47 @@ function formatWeekLabel(key) {
   } catch { return key; }
 }
 
-function getProximoDia() {
-  const today = new Date().getDay();
-  const gymDays = [
-    { day: 1, nombre: "Lunes" },
-    { day: 3, nombre: "Miercoles" },
-    { day: 5, nombre: "Viernes" }
-  ];
-  for (let i = 0; i <= 7; i++) {
-    const check = (today + i) % 7;
-    const found = gymDays.find(g => g.day === check);
-    if (found) return { dia: found.nombre, hoy: i === 0 };
-  }
-  return null;
+function pausaDe(week, ej) {
+  if (!ej.zona) return null;
+  return PAUSAS.find(p => p.semana === week && p.zona === ej.zona) || null;
 }
 
 function cacheKey(week, dia) { return `${week}-${dia}`; }
 function getCheck(week, dia, id) { return sesionesCache[cacheKey(week, dia)]?.[id]?.check || false; }
-function getPeso(week, dia, id) { return sesionesCache[cacheKey(week, dia)]?.[id]?.peso || ""; }
+function getPeso(week, dia, id) {
+  const p = sesionesCache[cacheKey(week, dia)]?.[id]?.peso;
+  return String(p ?? "").replace(/^'/, "");
+}
+
+// Evita que la Sheet convierta "4-12" o "4/12" en una fecha
+function pesoParaGuardar(v) {
+  const t = String(v ?? "").trim();
+  return /^\d{1,3}([.,]\d+)?\s*[-\/]\s*\d{1,3}([.,]\d+)?$/.test(t) ? "'" + t : t;
+}
 
 function getProgress(week, dia) {
-  if (!RUTINA[dia]) return { total: 0, done: 0 };
   let total = 0, done = 0;
   RUTINA[dia].bloques.forEach(b => b.ejercicios.forEach(e => {
+    if (pausaDe(week, e)) return;
     total++;
     if (getCheck(week, dia, e.id)) done++;
   }));
   return { total, done };
 }
 
+// Próximo día = el primer día de la semana que todavía no hiciste (menos de la mitad tildada)
+function getProximoDia() {
+  for (const d of DIAS) {
+    const { total, done } = getProgress(currentWeek, d);
+    if (done < Math.ceil(total / 2)) return { dia: d };
+  }
+  return { completa: true };
+}
+
 async function apiFetch(params) {
   const url = API + "?" + new URLSearchParams(params);
   const res = await fetch(url, { method: "GET", redirect: "follow" });
-  const text = await res.text();
-  return JSON.parse(text);
+  return JSON.parse(await res.text());
 }
 
 async function apiPost(body) {
@@ -194,8 +269,18 @@ async function apiPost(body) {
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(body)
   });
-  const text = await res.text();
-  return JSON.parse(text);
+  return JSON.parse(await res.text());
+}
+
+// Los guardados van de a uno (en fila) para que no se dupliquen filas en la Sheet
+function guardar(body) {
+  pendientes++;
+  showSaving();
+  saveChain = saveChain
+    .then(() => apiPost(body))
+    .catch(e => console.error("save error", e))
+    .finally(() => { pendientes--; showSaving(); });
+  return saveChain;
 }
 
 async function loadSesion(week, dia) {
@@ -205,12 +290,16 @@ async function loadSesion(week, dia) {
   try {
     const data = await apiFetch({ action: "getSesion", week, dia });
     sesionesCache[k] = data || {};
-  } catch(e) { console.error("loadSesion error", e); }
+  } catch (e) { console.error("loadSesion error", e); }
 }
 
-function showSaving(show) {
+async function loadSemana(week) {
+  await Promise.all(DIAS.map(d => loadSesion(week, d)));
+}
+
+function showSaving() {
   const el = document.getElementById("saving-indicator");
-  if (el) el.textContent = show ? "GUARDANDO..." : "";
+  if (el) el.textContent = pendientes > 0 ? "GUARDANDO..." : "";
 }
 
 function render() {
@@ -218,7 +307,10 @@ function render() {
 }
 
 function buildApp() {
-  const proximo = getProximoDia();
+  const p = getProximoDia();
+  const box = p.completa
+    ? `<div class="next-day-box"><div class="next-label">SEMANA</div><div class="next-name">✓ COMPLETA</div></div>`
+    : `<div class="next-day-box"><div class="next-label">⚡ TE TOCA</div><div class="next-name">${RUTINA[p.dia].emoji} ${DIAS_LABEL[p.dia]}</div></div>`;
   return `
     <div class="header">
       <div class="header-top">
@@ -227,12 +319,8 @@ function buildApp() {
           <div class="logo-sub">TRAINING LOG</div>
         </div>
         <div style="text-align:right">
-          <div class="saving-indicator" id="saving-indicator"></div>
-          ${proximo ? `
-          <div class="next-day-box ${proximo.hoy ? 'hoy' : ''}">
-            <div class="next-label ${proximo.hoy ? 'hoy' : ''}">${proximo.hoy ? '⚡ HOY TOCA' : 'PRÓXIMO DÍA'}</div>
-            <div class="next-name ${proximo.hoy ? 'hoy' : ''}">${RUTINA[proximo.dia]?.emoji || ''} ${DIAS_LABEL[proximo.dia]}</div>
-          </div>` : ''}
+          <div class="saving-indicator" id="saving-indicator">${pendientes > 0 ? "GUARDANDO..." : ""}</div>
+          ${box}
         </div>
       </div>
       <div class="vista-tabs">
@@ -245,12 +333,62 @@ function buildApp() {
   `;
 }
 
+function buildEjercicio(ej, isCurrentWeek) {
+  const pausa = pausaDe(semanaActiva, ej);
+  const ssBadge = ej.ss ? `<span class="ss-badge">SS ${ej.ss}</span>` : '';
+  const meta = `<div class="ej-meta"><span class="ej-meta-accent">${ej.series} series</span> · ${ej.reps}<span class="ej-ref">ref: ${ej.pesoRef}</span></div>`;
+
+  if (pausa) {
+    return `
+      <div class="ej-card pausado">
+        <div class="ej-inner">
+          <div class="pausa-icon">⏸</div>
+          <div class="ej-body">
+            <div class="ej-nombre">${ej.nombre}${ssBadge}</div>
+            ${meta}
+            <div class="pausa-txt">En pausa esta semana (${pausa.motivo})</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  const checked = getCheck(semanaActiva, diaActivo, ej.id);
+  const peso = getPeso(semanaActiva, diaActivo, ej.id);
+  return `
+    <div class="ej-card ${checked ? 'done' : ''}">
+      <div class="ej-inner">
+        <button class="check-box ${checked ? 'done' : ''}" ${!isCurrentWeek ? 'disabled' : ''} onclick="toggleCheck('${ej.id}')">
+          ${checked ? '✓' : ''}
+        </button>
+        <div class="ej-body">
+          <div class="ej-nombre ${checked ? 'done' : ''}">${ej.nombre}${ssBadge}</div>
+          ${meta}
+          ${ej.nota ? `<div class="ej-nota">⚠️ ${ej.nota}</div>` : ''}
+          <div class="peso-row">
+            <span class="peso-label">Peso:</span>
+            <input class="peso-input" placeholder="${isCurrentWeek ? 'ej: 20' : '—'}"
+              value="${esc(peso)}" ${!isCurrentWeek ? 'disabled' : ''}
+              onchange="updatePeso('${ej.id}', this.value)">
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
 function buildRutina() {
   const isCurrentWeek = semanaActiva === currentWeek;
   const dia = RUTINA[diaActivo];
-  if (!dia) return '<div class="content"><div class="empty-msg">Cargando...</div></div>';
   const { total, done } = getProgress(semanaActiva, diaActivo);
   const pct = total > 0 ? (done / total) * 100 : 0;
+
+  const pausasDia = [];
+  dia.bloques.forEach(b => b.ejercicios.forEach(e => {
+    const p = pausaDe(semanaActiva, e);
+    if (p && !pausasDia.includes(p)) pausasDia.push(p);
+  }));
+  const bannerPausa = pausasDia.map(p =>
+    `<div class="banner pausa">⏸ Esta semana sin ${p.zona} (${p.motivo}). Hacé solo los ejercicios activos, sin superserie, y con el descanso indicado.</div>`
+  ).join('');
 
   const semanaBtns = allWeeks.slice(0, 5).map(w => `
     <button class="semana-btn ${semanaActiva === w ? 'active' : ''}" onclick="switchSemana('${w}')">
@@ -261,40 +399,15 @@ function buildRutina() {
     const { total: t, done: dn } = getProgress(semanaActiva, d);
     return `<button class="dia-tab ${diaActivo === d ? 'active' : ''}" onclick="switchDia('${d}')">
       ${DIAS_LABEL[d]}
-      <span class="dia-tab-count ${dn > 0 && dn === t ? 'completo' : ''}">${dn > 0 ? dn+'/'+t : ' '}</span>
+      <span class="dia-tab-count ${dn > 0 && dn === t ? 'completo' : ''}">${dn > 0 ? dn + '/' + t : ' '}</span>
     </button>`;
   }).join('');
 
-  const bloques = dia.bloques.map(bloque => {
-    const ejercicios = bloque.ejercicios.map(ej => {
-      const checked = getCheck(semanaActiva, diaActivo, ej.id);
-      const peso = getPeso(semanaActiva, diaActivo, ej.id);
-      return `
-        <div class="ej-card ${checked ? 'done' : ''}">
-          <div class="ej-inner">
-            <button class="check-box ${checked ? 'done' : ''}" ${!isCurrentWeek ? 'disabled' : ''} onclick="toggleCheck('${ej.id}')">
-              ${checked ? '✓' : ''}
-            </button>
-            <div class="ej-body">
-              <div class="ej-nombre ${checked ? 'done' : ''}">
-                ${ej.nombre}${ej.superserie ? '<span class="superserie-badge">SS</span>' : ''}
-              </div>
-              <div class="ej-meta">
-                <span class="ej-meta-accent">${ej.series} series</span> · ${ej.reps}
-                <span class="ej-ref">ref: ${ej.pesoRef}</span>
-              </div>
-              <div class="peso-row">
-                <span class="peso-label">Peso:</span>
-                <input class="peso-input" placeholder="${isCurrentWeek ? 'ej: 12 kg' : '—'}"
-                  value="${peso}" ${!isCurrentWeek ? 'disabled' : ''}
-                  onchange="updatePeso('${ej.id}', this.value)">
-              </div>
-            </div>
-          </div>
-        </div>`;
-    }).join('');
-    return `<div class="bloque"><div class="bloque-title">${bloque.nombre}</div>${ejercicios}</div>`;
-  }).join('');
+  const bloques = dia.bloques.map(bloque => `
+    <div class="bloque">
+      <div class="bloque-title">${bloque.nombre}</div>
+      ${bloque.ejercicios.map(ej => buildEjercicio(ej, isCurrentWeek)).join('')}
+    </div>`).join('');
 
   return `
     <div class="semana-bar">
@@ -306,41 +419,41 @@ function buildRutina() {
         <div><span style="font-size:26px;margin-right:8px">${dia.emoji}</span><span class="dia-title">${dia.label}</span></div>
         <span class="dia-count ${pct === 100 ? 'completo' : ''}">${done}/${total}</span>
       </div>
-      ${!isCurrentWeek ? '<div class="readonly-banner">📖 Modo lectura — semana pasada</div>' : ''}
+      ${!isCurrentWeek ? '<div class="banner">📖 Modo lectura — semana pasada</div>' : ''}
+      ${bannerPausa}
       <div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div>
       ${bloques}
     </div>`;
 }
 
 function buildHistorial() {
-  if (allWeeks.length === 0) return `<div class="content"><div class="empty-msg">Acá vas a ver el historial una vez que empieces a registrar.</div></div>`;
-  const cards = allWeeks.map(week => {
+  const semanas = allWeeks.filter(w => w === currentWeek || DIAS.some(d =>
+    RUTINA[d].bloques.some(b => b.ejercicios.some(e => sesionesCache[cacheKey(w, d)]?.[e.id]))
+  ));
+  if (semanas.length === 0) return `<div class="content"><div class="empty-msg">Acá vas a ver el historial una vez que empieces a registrar.</div></div>`;
+  const cards = semanas.map(week => {
     const diasHtml = DIAS.map(dia => {
       const { total, done } = getProgress(week, dia);
       const pct = total > 0 ? (done / total) * 100 : 0;
       const sesion = sesionesCache[cacheKey(week, dia)] || {};
-      const hasData = Object.keys(sesion).length > 0;
-      let pesosHtml = '';
-      if (hasData && RUTINA[dia]) {
-        let rows = '';
-        RUTINA[dia].bloques.forEach(b => b.ejercicios.forEach(ej => {
-          const d = sesion[ej.id];
-          if (!d) return;
-          const nombre = ej.nombre.length > 35 ? ej.nombre.substring(0, 35) + '…' : ej.nombre;
-          rows += `<div class="hist-peso-row">
-            <span class="hist-peso-nombre" style="${d.check ? 'text-decoration:line-through' : ''}">${nombre}</span>
-            <span class="hist-peso-val">${d.peso || (d.check ? '✓' : '—')}</span>
-          </div>`;
-        }));
-        if (rows) pesosHtml = `<div class="hist-pesos">${rows}</div>`;
-      }
+      let rows = '';
+      RUTINA[dia].bloques.forEach(b => b.ejercicios.forEach(ej => {
+        const d = sesion[ej.id];
+        if (!d) return;
+        const peso = String(d.peso ?? "").replace(/^'/, "");
+        const nombre = ej.nombre.length > 35 ? ej.nombre.substring(0, 35) + '…' : ej.nombre;
+        rows += `<div class="hist-peso-row">
+          <span class="hist-peso-nombre" style="${d.check ? 'text-decoration:line-through' : ''}">${nombre}</span>
+          <span class="hist-peso-val">${esc(peso) || (d.check ? '✓' : '—')}</span>
+        </div>`;
+      }));
       return `<div style="margin-bottom:12px">
         <div class="hist-dia-label">
-          <span>${RUTINA[dia]?.emoji || ''} ${DIAS_LABEL[dia]}</span>
+          <span>${RUTINA[dia].emoji} ${DIAS_LABEL[dia]} · ${RUTINA[dia].label}</span>
           <span class="hist-dia-done ${done === total && total > 0 ? 'completo' : ''}">${done}/${total}${done === total && total > 0 ? ' ✓' : ''}</span>
         </div>
         <div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div>
-        ${pesosHtml}
+        ${rows ? `<div class="hist-pesos">${rows}</div>` : ''}
       </div>`;
     }).join('');
     return `<div class="hist-card">
@@ -354,15 +467,13 @@ function buildHistorial() {
 
 async function switchVista(v) {
   vista = v;
-  if (v === 'historial') {
-    for (const w of allWeeks) for (const d of DIAS) await loadSesion(w, d);
-  }
+  if (v === 'historial') await Promise.all(allWeeks.slice(0, 8).map(loadSemana));
   render();
 }
 
 async function switchSemana(w) {
   semanaActiva = w;
-  for (const d of DIAS) await loadSesion(w, d);
+  await loadSemana(w);
   render();
 }
 
@@ -372,48 +483,39 @@ async function switchDia(d) {
   render();
 }
 
-async function toggleCheck(ejId) {
+function toggleCheck(ejId) {
   const current = getCheck(semanaActiva, diaActivo, ejId);
   const peso = getPeso(semanaActiva, diaActivo, ejId);
   const k = cacheKey(semanaActiva, diaActivo);
   if (!sesionesCache[k]) sesionesCache[k] = {};
   sesionesCache[k][ejId] = { check: !current, peso };
   render();
-  showSaving(true);
-  await apiPost({ week: semanaActiva, dia: diaActivo, ejercicioId: ejId, check: !current, peso });
-  showSaving(false);
+  guardar({ week: semanaActiva, dia: diaActivo, ejercicioId: ejId, check: !current, peso: pesoParaGuardar(peso) });
 }
 
-async function updatePeso(ejId, valor) {
+function updatePeso(ejId, valor) {
   const check = getCheck(semanaActiva, diaActivo, ejId);
   const k = cacheKey(semanaActiva, diaActivo);
   if (!sesionesCache[k]) sesionesCache[k] = {};
   sesionesCache[k][ejId] = { check, peso: valor };
-  showSaving(true);
-  await apiPost({ week: semanaActiva, dia: diaActivo, ejercicioId: ejId, check, peso: valor });
-  showSaving(false);
+  guardar({ week: semanaActiva, dia: diaActivo, ejercicioId: ejId, check, peso: pesoParaGuardar(valor) });
 }
 
 async function init() {
   currentWeek = getWeekKey();
   semanaActiva = currentWeek;
-
   try {
-    RUTINA = await apiFetch({ action: "getRutina" });
     const weeks = await apiFetch({ action: "getAllWeeks" });
     allWeeks = Array.isArray(weeks) ? weeks : [];
     if (!allWeeks.includes(currentWeek)) allWeeks.unshift(currentWeek);
-  } catch(e) {
+    await loadSemana(currentWeek);
+  } catch (e) {
     console.error("init error", e);
     document.getElementById("loading").innerHTML = '<div class="error-msg">❌ Error conectando con Google Sheets.<br><br>Revisá tu conexión e intentá de nuevo.</div>';
     return;
   }
-
-  const proximo = getProximoDia();
-  if (proximo) diaActivo = proximo.dia;
-
-  await loadSesion(currentWeek, diaActivo);
-
+  const p = getProximoDia();
+  if (p.dia) diaActivo = p.dia;
   document.getElementById("loading").style.display = "none";
   document.getElementById("app").style.display = "block";
   render();
