@@ -102,81 +102,87 @@ const API = "https://script.google.com/macros/s/AKfycbx1uwWuhQRDijpDxEEYJDgoIxbz
 // tipo "pausa": los ejercicios de esa zona no se hacen esa semana.
 // tipo "suave": se hacen con la versión "suave" de cada ejercicio (o se pausan si suave = "pausa").
 const PAUSAS = [
-  { semana: "2026-W44", zona: "espalda", tipo: "pausa", motivo: "contractura en el omóplato" },
-  { semana: "2026-W45", zona: "espalda", tipo: "suave", motivo: "sobrecarga en dorsal y omóplato" },
+  { semana: "2026-W46", zona: "espalda", tipo: "suave", motivo: "vuelta después de la sobrecarga en dorsal y omóplato" },
 ];
 
-// ===== RUTINA (noviembre 2026) =====
+// ===== RUTINA (desde 9/11/2026) =====
 // ss = letra de superserie: los ejercicios con la misma letra se hacen uno atrás del otro.
 const RUTINA = {
   Lunes: {
-    label: "PECHO + ESPALDA",
+    label: "PECHO + BÍCEPS",
     emoji: "💪",
     bloques: [
-      { nombre: "Superserie A — fuerza · 90 seg al terminar la vuelta", ejercicios: [
-        { id: "L1", nombre: "Press plano con mancuernas", series: 4, reps: "8 reps", pesoRef: "20 kg c/u", ss: "A" },
-        { id: "L2", nombre: "Jalón al pecho agarre neutro (triángulo)", series: 4, reps: "8 reps", pesoRef: "40 kg", ss: "A", zona: "espalda", suave: { series: 3, reps: "12 reps lentas", pesoRef: "20-25 kg" } },
+      { nombre: "Principal · 90 seg", ejercicios: [
+        { id: "P1", nombre: "Press plano con mancuernas", series: 4, reps: "8-10 reps", pesoRef: "18 kg c/u" },
       ]},
-      { nombre: "Superserie B — volumen · 75 seg", ejercicios: [
-        { id: "L3", nombre: "Press inclinado en máquina convergente", series: 3, reps: "10 reps", pesoRef: "15 kg x lado", ss: "B" },
-        { id: "L4", nombre: "Remo con pecho apoyado en banco inclinado", series: 3, reps: "10 reps", pesoRef: "14 kg c/u", ss: "B", zona: "espalda", suave: { series: 3, reps: "12 reps lentas", pesoRef: "8 kg c/u" } },
+      { nombre: "Superserie A · 75 seg", ejercicios: [
+        { id: "P2", nombre: "Press inclinado en Smith (30°)", series: 3, reps: "10 reps", pesoRef: "17.5 kg (barra + discos)", ss: "A" },
+        { id: "P3", nombre: "Elevación lateral en polea baja a 1 brazo", series: 3, reps: "12 c/brazo", pesoRef: "5 kg", ss: "A" },
       ]},
-      { nombre: "Superserie C — bombeo · 60 seg", ejercicios: [
-        { id: "L5", nombre: "Cruce de polea alto → bajo", series: 3, reps: "12 reps", pesoRef: "10 kg x lado", ss: "C" },
-        { id: "L6", nombre: "Pullover en polea alta con soga", series: 3, reps: "12 reps", pesoRef: "15 kg", ss: "C", zona: "espalda", suave: "pausa" },
+      { nombre: "Superserie B · 60 seg", ejercicios: [
+        { id: "P4", nombre: "Peck deck (aperturas en máquina)", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
+        { id: "P5", nombre: "Curl en banco Scott con barra Z", series: 3, reps: "10 reps", pesoRef: "15 kg", ss: "B" },
+      ]},
+      { nombre: "Superserie C · 60 seg", ejercicios: [
+        { id: "P6", nombre: "Curl inclinado con mancuernas (banco 45°)", series: 3, reps: "10 reps", pesoRef: "8 kg c/u", ss: "C" },
+        { id: "P7", nombre: "Curl martillo en polea con soga", series: 3, reps: "12 reps", pesoRef: "10 kg", ss: "C" },
       ]},
       { nombre: "Core · 30 seg", ejercicios: [
-        { id: "L7", nombre: "Pallof press", series: 3, reps: "10 c/lado", pesoRef: "7.5 kg", ss: "D" },
-        { id: "L8", nombre: "Dead bug", series: 3, reps: "10 c/lado", pesoRef: "—", ss: "D" },
+        { id: "P8", nombre: "Pallof press", series: 3, reps: "10 c/lado", pesoRef: "7.5 kg", ss: "D" },
+        { id: "P9", nombre: "Dead bug", series: 3, reps: "10 c/lado", pesoRef: "—", ss: "D" },
       ]},
     ]
   },
   Miercoles: {
-    label: "PIERNAS + CORE",
-    emoji: "🦵",
+    label: "ESPALDA + TRÍCEPS",
+    emoji: "🏋️",
     bloques: [
-      { nombre: "Activación — 5 min", ejercicios: [
-        { id: "M0", nombre: "Movilidad cadera/tobillo + caminata lateral con banda", series: 1, reps: "5 min + 2x15 pasos", pesoRef: "banda media" },
-      ]},
       { nombre: "Principal · 90 seg", ejercicios: [
-        { id: "M1", nombre: "Prensa (pausa 1 seg abajo)", series: 4, reps: "10 reps", pesoRef: "70 kg" },
+        { id: "E1", nombre: "Jalón al pecho agarre neutro (triángulo)", series: 4, reps: "10 reps", pesoRef: "40 kg", zona: "espalda", suave: { series: 3, reps: "12 reps lentas", pesoRef: "25 kg" } },
       ]},
       { nombre: "Superserie A · 75 seg", ejercicios: [
-        { id: "M2", nombre: "Sentadilla búlgara con mancuernas", series: 3, reps: "8 c/pierna", pesoRef: "8 kg c/u", ss: "A" },
-        { id: "M3", nombre: "Camilla isquiotibiales", series: 3, reps: "12 reps", pesoRef: "4 ladrillos", ss: "A" },
+        { id: "E2", nombre: "Remo a 1 brazo con mancuerna", series: 3, reps: "10 c/lado", pesoRef: "16 kg", ss: "A", zona: "espalda", suave: { series: 3, reps: "12 c/lado lentas", pesoRef: "10 kg" } },
+        { id: "E3", nombre: "Tríceps en polea con barra V", series: 3, reps: "12 reps", pesoRef: "15 kg", ss: "A" },
       ]},
       { nombre: "Superserie B · 75 seg", ejercicios: [
-        { id: "M4", nombre: "Hip thrust", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
-        { id: "M5", nombre: "Extensión de cuádriceps (pausa arriba)", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
+        { id: "E4", nombre: "Remo sentado en máquina", series: 3, reps: "10 reps", pesoRef: "35 kg", ss: "B", zona: "espalda", suave: { series: 3, reps: "12 reps lentas", pesoRef: "25 kg" } },
+        { id: "E5", nombre: "Press francés con barra Z", series: 3, reps: "10 reps", pesoRef: "10 kg", ss: "B" },
       ]},
-      { nombre: "Superserie C · 45 seg", ejercicios: [
-        { id: "M6", nombre: "Gemelo en prensa", series: 3, reps: "15 reps", pesoRef: "60 kg", ss: "C" },
-        { id: "M7", nombre: "Plancha lateral con elevación de cadera", series: 3, reps: "10 c/lado", pesoRef: "—", ss: "C" },
+      { nombre: "Superserie C · 60 seg", ejercicios: [
+        { id: "E6", nombre: "Face pull", series: 3, reps: "15 reps", pesoRef: "12.5 kg", ss: "C", zona: "espalda", suave: { series: 3, reps: "15 reps", pesoRef: "7.5 kg" } },
+        { id: "E7", nombre: "Patada de tríceps en polea a 1 brazo", series: 3, reps: "12 c/brazo", pesoRef: "5 kg", ss: "C" },
+      ]},
+      { nombre: "Core + lumbar · 30 seg", ejercicios: [
+        { id: "E8", nombre: "Hiperextensiones (banco romano)", series: 3, reps: "15 reps", pesoRef: "disco 5 kg", ss: "D", zona: "espalda", suave: { series: 3, reps: "12 reps", pesoRef: "sin peso" } },
+        { id: "E9", nombre: "Crunch en polea alta", series: 3, reps: "15 reps", pesoRef: "15 kg", ss: "D" },
       ]},
     ]
   },
   Viernes: {
-    label: "HOMBROS + BRAZOS",
-    emoji: "🔥",
+    label: "PIERNAS",
+    emoji: "🦵",
     bloques: [
-      { nombre: "Superserie A — hombro sano · 60 seg", ejercicios: [
-        { id: "V1", nombre: "Press landmine a 1 brazo (barra en esquina)", series: 3, reps: "10 c/brazo", pesoRef: "barra + 5 kg", ss: "A", nota: "Si te tira en el omóplato, lo dejás." },
-        { id: "V2", nombre: "Face pull", series: 3, reps: "15 reps", pesoRef: "12.5 kg", ss: "A", zona: "espalda", suave: { series: 3, reps: "15 reps", pesoRef: "7.5 kg" } },
+      { nombre: "Activación — 5 min", ejercicios: [
+        { id: "G0", nombre: "Movilidad cadera/tobillo + caminata lateral con banda", series: 1, reps: "5 min + 2x15 pasos", pesoRef: "banda media" },
       ]},
-      { nombre: "Superserie B · 60 seg", ejercicios: [
-        { id: "V3", nombre: "Elevación lateral en polea baja a 1 brazo", series: 3, reps: "12 c/brazo", pesoRef: "5 kg", ss: "B" },
-        { id: "V4", nombre: "Pájaro en peck deck invertido", series: 3, reps: "15 reps", pesoRef: "15 kg", ss: "B", zona: "espalda", suave: { series: 3, reps: "15 reps", pesoRef: "10 kg" } },
+      { nombre: "Principal · 90 seg", ejercicios: [
+        { id: "G1", nombre: "Prensa (pausa 1 seg abajo)", series: 4, reps: "10 reps", pesoRef: "60 kg" },
       ]},
-      { nombre: "Superserie C — brazos · 60 seg", ejercicios: [
-        { id: "V5", nombre: "Curl inclinado con mancuernas (banco 45°)", series: 3, reps: "10 reps", pesoRef: "8 kg c/u", ss: "C" },
-        { id: "V6", nombre: "Press francés con barra Z", series: 3, reps: "10 reps", pesoRef: "12.5 kg", ss: "C" },
+      { nombre: "Superserie A · 75 seg", ejercicios: [
+        { id: "G2", nombre: "Sentadilla búlgara con mancuernas", series: 3, reps: "8 c/pierna", pesoRef: "8 kg c/u", ss: "A" },
+        { id: "G3", nombre: "Camilla isquiotibiales", series: 3, reps: "12 reps", pesoRef: "4 ladrillos", ss: "A" },
       ]},
-      { nombre: "Superserie D — brazos · 60 seg", ejercicios: [
-        { id: "V7", nombre: "Curl martillo en polea con soga", series: 3, reps: "12 reps", pesoRef: "10 kg", ss: "D" },
-        { id: "V8", nombre: "Tríceps en polea con barra V", series: 3, reps: "12 reps", pesoRef: "15 kg", ss: "D" },
+      { nombre: "Superserie B · 75 seg", ejercicios: [
+        { id: "G4", nombre: "Hip thrust", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
+        { id: "G5", nombre: "Extensión de cuádriceps (pausa arriba)", series: 3, reps: "12 reps", pesoRef: "25 kg", ss: "B" },
       ]},
-      { nombre: "Final", ejercicios: [
-        { id: "V9", nombre: "Paseo del granjero", series: 3, reps: "30-40 m", pesoRef: "16 kg c/u", zona: "espalda", suave: "pausa" },
+      { nombre: "Superserie C · 45 seg", ejercicios: [
+        { id: "G6", nombre: "Gemelo en prensa", series: 3, reps: "15 reps", pesoRef: "60 kg", ss: "C" },
+        { id: "G7", nombre: "Aductor en máquina", series: 3, reps: "15 reps", pesoRef: "4 ladrillos", ss: "C" },
+      ]},
+      { nombre: "Core · 30 seg", ejercicios: [
+        { id: "G8", nombre: "Crunch inverso en banco", series: 3, reps: "12 reps", pesoRef: "—", ss: "D" },
+        { id: "G9", nombre: "Plancha lateral con elevación de cadera", series: 3, reps: "10 c/lado", pesoRef: "—", ss: "D" },
       ]},
     ]
   }
