@@ -64,6 +64,16 @@
   .ej-ref { font-size: 12px; color: #555; display: block; margin-top: 3px; }
   .ej-nota { font-size: 12px; color: #ffb300; margin-bottom: 10px; }
   .pausa-txt { font-size: 13px; color: #ffb300; }
+  .sug { background: #0f1a0f; border: 1px solid #2e7d3255; border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; font-size: 13px; color: #9ccc9c; }
+  .sug-ultima { color: #6a8a6a; font-size: 12px; margin-bottom: 4px; }
+  .sug-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .sug-val { color: #7CFC9a; font-size: 17px; }
+  .sug-motivo { color: #6a8a6a; font-size: 11px; display: block; margin-top: 2px; }
+  .sug-btn { background: #2e7d32; color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'DM Mono'; font-size: 13px; cursor: pointer; flex-shrink: 0; }
+  .fb-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+  .fb-label { font-size: 12px; color: #555; width: 100%; }
+  .fb-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #888; border-radius: 20px; padding: 7px 12px; font-family: 'DM Mono'; font-size: 12px; cursor: pointer; }
+  .fb-btn.sel { background: #ff4d0022; border-color: #ff4d00; color: #ff4d00; }
   .suave-badge { background: #ffb30022; color: #ffb300; border-color: #ffb30055; }
   .peso-row { display: flex; align-items: center; gap: 10px; }
   .peso-label { font-size: 13px; color: #444; white-space: nowrap; }
@@ -101,9 +111,27 @@ const API = "https://script.google.com/macros/s/AKfycbx1uwWuhQRDijpDxEEYJDgoIxbz
 // ===== CUIDADOS POR ZONA =====
 // tipo "pausa": los ejercicios de esa zona no se hacen esa semana.
 // tipo "suave": se hacen con la versión "suave" de cada ejercicio (o se pausan si suave = "pausa").
+// "desde" + "sesiones": se aplica desde esa semana hasta que hagas esa cantidad de sesiones de la zona.
 const PAUSAS = [
-  { semana: "2026-W46", zona: "espalda", tipo: "suave", motivo: "vuelta después de la sobrecarga en dorsal y omóplato" },
+  { desde: "2026-W46", sesiones: 1, zona: "espalda", tipo: "suave", motivo: "vuelta después de la sobrecarga en dorsal y omóplato" },
 ];
+
+// Semana en que arrancó esta rutina: las sugerencias de peso solo miran desde acá.
+const RUTINA_DESDE = "2026-W46";
+
+// Cuánto subir (o bajar) cada ejercicio cuando toca progresar.
+const INC = {
+  P1: 2, P2: 2.5, P3: 1, P4: 2.5, P5: 2.5, P6: 2, P7: 2.5, P8: 2.5,
+  E1: 5, E2: 2, E3: 2.5, E4: 5, E5: 2.5, E6: 2.5, E7: 1, E8: 5,
+  G1: 10, G2: 2, G3: 1, G4: 5, G5: 5, G6: 10, G7: 1,
+};
+
+// Cómo te fue con el peso (se guarda como "<id>~fb" en la Sheet)
+const FB = {
+  facil: { emoji: "😎", txt: "Me sobró" },
+  justo: { emoji: "💪", txt: "Justo" },
+  duro:  { emoji: "😓", txt: "No llegué" },
+};
 
 // ===== RUTINA (desde 9/11/2026) =====
 // ss = letra de superserie: los ejercicios con la misma letra se hacen uno atrás del otro.
@@ -227,9 +255,23 @@ function formatWeekLabel(key) {
   } catch { return key; }
 }
 
+// Cuántas sesiones con algún ejercicio de la zona tildado hiciste en [desde, antes de week)
+function sesionesDeZona(zona, desde, week) {
+  let n = 0;
+  allWeeks.filter(w => w >= desde && w < week).forEach(w => DIAS.forEach(d => {
+    const hizo = RUTINA[d].bloques.some(b => b.ejercicios.some(e => e.zona === zona && getCheck(w, d, e.id)));
+    if (hizo) n++;
+  }));
+  return n;
+}
+
 function cuidadoDe(week, ej) {
   if (!ej.zona) return null;
-  return PAUSAS.find(p => p.semana === week && p.zona === ej.zona) || null;
+  return PAUSAS.find(p => {
+    if (p.zona !== ej.zona) return false;
+    if (p.semana) return p.semana === week;
+    return week >= p.desde && sesionesDeZona(p.zona, p.desde, week) < (p.sesiones || 1);
+  }) || null;
 }
 
 // Devuelve el cuidado solo si ese ejercicio queda pausado esa semana
@@ -252,6 +294,85 @@ function getCheck(week, dia, id) { return sesionesCache[cacheKey(week, dia)]?.[i
 function getPeso(week, dia, id) {
   const p = sesionesCache[cacheKey(week, dia)]?.[id]?.peso;
   return String(p ?? "").replace(/^'/, "");
+}
+
+function getFb(week, dia, id) { return sesionesCache[cacheKey(week, dia)]?.[id + "~fb"]?.peso || ""; }
+
+function num(v) {
+  const m = String(v ?? "").replace(",", ".").match(/\d+(\.\d+)?/);
+  return m ? parseFloat(m[0]) : null;
+}
+
+function fmtNum(n) { return String(Math.round(n * 100) / 100); }
+
+function redondear(x, inc) { return Math.round(x / inc) * inc; }
+
+// Lunes de una semana ISO, para medir la distancia entre semanas
+function lunesDe(key) {
+  const [y, w] = key.split("-W").map(Number);
+  const jan4 = new Date(Date.UTC(y, 0, 4));
+  const d = new Date(jan4);
+  d.setUTCDate(jan4.getUTCDate() - ((jan4.getUTCDay() || 7) - 1) + (w - 1) * 7);
+  return d;
+}
+function semanasEntre(a, b) { return Math.round((lunesDe(b) - lunesDe(a)) / (7 * 86400000)); }
+
+function semanasPrevias(week) {
+  return allWeeks.filter(w => w < week && w >= RUTINA_DESDE).sort().reverse().slice(0, 8);
+}
+
+async function loadPrevios(dia, week) {
+  await Promise.all(semanasPrevias(week).map(w => loadSesion(w, dia)));
+}
+
+// Sesiones anteriores de un ejercicio con peso numérico, de la más nueva a la más vieja
+function historialEj(week, dia, ej) {
+  return semanasPrevias(week)
+    .map(w => ({ week: w, n: num(getPeso(w, dia, ej.id)), check: getCheck(w, dia, ej.id), fb: getFb(w, dia, ej.id) }))
+    .filter(h => h.n !== null && h.n > 0);
+}
+
+// Peso sugerido para hoy según lo que hiciste antes
+function sugerencia(week, dia, ej) {
+  const inc = INC[ej.id];
+  if (!inc) return null;
+  const suave = suaveDe(week, ej);
+  const h = historialEj(week, dia, ej);
+  const ultima = h[0] || null;
+
+  if (suave) {
+    const n = num(suave.pesoRef);
+    return n ? { valor: fmtNum(n), flecha: "🩹", motivo: "semana suave", ultima } : null;
+  }
+  if (!ultima) {
+    const n = num(ej.pesoRef);
+    return n ? { valor: fmtNum(n), flecha: "", motivo: "peso de referencia, calibrá", ultima } : null;
+  }
+
+  const last = ultima.n, prev = h[1];
+  const mismoAntes = prev && prev.n === last;
+  let v = last, motivo = "repetí el peso";
+
+  if (suaveDe(ultima.week, ej)) {
+    const normal = num(ej.pesoRef) || last + inc;
+    v = Math.min(normal, Math.max(last + inc, Math.floor((last + normal) / 2 / inc) * inc));
+    motivo = "volviendo de la semana suave";
+  } else if (semanasEntre(ultima.week, week) > 3) {
+    motivo = "venís de un parate, repetí";
+  } else if (ultima.fb === "facil") {
+    v = last + inc; motivo = "la última te sobró";
+  } else if (ultima.fb === "duro") {
+    if (mismoAntes && prev.fb === "duro") { v = Math.max(inc, last - inc); motivo = "dos veces no llegaste, bajá un poco"; }
+    else motivo = "no llegaste, repetí hasta completar";
+  } else if (ultima.fb === "justo") {
+    if (mismoAntes && prev.fb !== "duro") { v = last + inc; motivo = "2 sesiones con el mismo peso, subí"; }
+    else motivo = "salió justo, repetí";
+  } else if (mismoAntes && ultima.check && prev.check) {
+    v = last + inc; motivo = "2 sesiones completas con el mismo peso, subí";
+  }
+
+  const flecha = v > last ? "⬆️" : v < last ? "⬇️" : "➡️";
+  return { valor: fmtNum(v), flecha, motivo, ultima };
 }
 
 // Evita que la Sheet convierta "4-12" o "4/12" en una fecha
@@ -379,6 +500,29 @@ function buildEjercicio(ej, isCurrentWeek) {
 
   const checked = getCheck(semanaActiva, diaActivo, ej.id);
   const peso = getPeso(semanaActiva, diaActivo, ej.id);
+  const sug = isCurrentWeek ? sugerencia(semanaActiva, diaActivo, ej) : null;
+  const fb = getFb(semanaActiva, diaActivo, ej.id);
+
+  let sugHtml = '';
+  if (sug) {
+    const u = sug.ultima;
+    const ultimaTxt = u ? `Última vez: <b>${fmtNum(u.n)}</b> · ${formatWeekLabel(u.week)}${u.fb ? ' ' + FB[u.fb].emoji : ''}` : 'Primera vez con este ejercicio';
+    sugHtml = `
+      <div class="sug">
+        <div class="sug-ultima">${ultimaTxt}</div>
+        <div class="sug-row">
+          <span>Hoy: <b class="sug-val">${sug.valor}</b> ${sug.flecha} <span class="sug-motivo">${sug.motivo}</span></span>
+          ${peso !== sug.valor ? `<button class="sug-btn" onclick="usarSugerencia('${ej.id}', '${sug.valor}')">Usar</button>` : ''}
+        </div>
+      </div>`;
+  }
+
+  const fbHtml = (checked && isCurrentWeek && INC[ej.id]) ? `
+    <div class="fb-row">
+      <span class="fb-label">¿Cómo te fue?</span>
+      ${Object.entries(FB).map(([k, f]) => `<button class="fb-btn ${fb === k ? 'sel' : ''}" onclick="setFb('${ej.id}', '${k}')">${f.emoji} ${f.txt}</button>`).join('')}
+    </div>` : '';
+
   return `
     <div class="ej-card ${checked ? 'done' : ''}">
       <div class="ej-inner">
@@ -390,12 +534,14 @@ function buildEjercicio(ej, isCurrentWeek) {
           ${meta}
           ${ej.nota ? `<div class="ej-nota">⚠️ ${ej.nota}</div>` : ''}
           ${suave ? `<div class="ej-nota">🩹 Sin llegar al fallo. Si molesta en dorsal u omóplato, cortás.</div>` : ''}
+          ${sugHtml}
           <div class="peso-row">
             <span class="peso-label">Peso:</span>
-            <input class="peso-input" placeholder="${isCurrentWeek ? 'ej: 20' : '—'}"
+            <input class="peso-input" placeholder="${isCurrentWeek ? (sug ? sug.valor : 'ej: 20') : '—'}"
               value="${esc(peso)}" ${!isCurrentWeek ? 'disabled' : ''}
               onchange="updatePeso('${ej.id}', this.value)">
           </div>
+          ${fbHtml}
         </div>
       </div>
     </div>`;
@@ -471,7 +617,7 @@ function buildHistorial() {
         const nombre = ej.nombre.length > 35 ? ej.nombre.substring(0, 35) + '…' : ej.nombre;
         rows += `<div class="hist-peso-row">
           <span class="hist-peso-nombre" style="${d.check ? 'text-decoration:line-through' : ''}">${nombre}</span>
-          <span class="hist-peso-val">${esc(peso) || (d.check ? '✓' : '—')}</span>
+          <span class="hist-peso-val">${esc(peso) || (d.check ? '✓' : '—')}${sesion[ej.id + '~fb'] ? ' ' + (FB[sesion[ej.id + '~fb'].peso]?.emoji || '') : ''}</span>
         </div>`;
       }));
       return `<div style="margin-bottom:12px">
@@ -500,19 +646,45 @@ async function switchVista(v) {
 
 async function switchSemana(w) {
   semanaActiva = w;
-  await loadSemana(w);
+  await Promise.all([loadSemana(w), loadPrevios(diaActivo, w)]);
   render();
 }
 
 async function switchDia(d) {
   diaActivo = d;
-  await loadSesion(semanaActiva, d);
+  await Promise.all([loadSesion(semanaActiva, d), loadPrevios(d, semanaActiva)]);
   render();
+}
+
+function buscarEj(dia, id) {
+  for (const b of RUTINA[dia].bloques) for (const e of b.ejercicios) if (e.id === id) return e;
+  return null;
+}
+
+function usarSugerencia(ejId, valor) {
+  updatePeso(ejId, valor);
+  render();
+}
+
+function setFb(ejId, val) {
+  const k = cacheKey(semanaActiva, diaActivo);
+  if (!sesionesCache[k]) sesionesCache[k] = {};
+  const actual = sesionesCache[k][ejId + "~fb"]?.peso;
+  const nuevo = actual === val ? "" : val;
+  sesionesCache[k][ejId + "~fb"] = { check: !!nuevo, peso: nuevo };
+  render();
+  guardar({ week: semanaActiva, dia: diaActivo, ejercicioId: ejId + "~fb", check: !!nuevo, peso: nuevo });
 }
 
 function toggleCheck(ejId) {
   const current = getCheck(semanaActiva, diaActivo, ejId);
-  const peso = getPeso(semanaActiva, diaActivo, ejId);
+  let peso = getPeso(semanaActiva, diaActivo, ejId);
+  // Si tildás sin cargar peso, se guarda el sugerido
+  if (!current && !peso) {
+    const ej = buscarEj(diaActivo, ejId);
+    const sug = ej ? sugerencia(semanaActiva, diaActivo, ej) : null;
+    if (sug) peso = sug.valor;
+  }
   const k = cacheKey(semanaActiva, diaActivo);
   if (!sesionesCache[k]) sesionesCache[k] = {};
   sesionesCache[k][ejId] = { check: !current, peso };
@@ -536,6 +708,7 @@ async function init() {
     allWeeks = Array.isArray(weeks) ? weeks : [];
     if (!allWeeks.includes(currentWeek)) allWeeks.unshift(currentWeek);
     await loadSemana(currentWeek);
+    await Promise.all(DIAS.map(d => loadPrevios(d, currentWeek)));
   } catch (e) {
     console.error("init error", e);
     document.getElementById("loading").innerHTML = '<div class="error-msg">❌ Error conectando con Google Sheets.<br><br>Revisá tu conexión e intentá de nuevo.</div>';
