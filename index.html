@@ -121,7 +121,7 @@ const RUTINA_DESDE = "2026-W46";
 
 // Cuánto subir (o bajar) cada ejercicio cuando toca progresar.
 const INC = {
-  P1: 2, P2: 2.5, P3: 1, P4: 2.5, P5: 2.5, P6: 2, P7: 2.5, P8: 2.5,
+  P1: 2, P2: 2.5, P3: 1, P4: 2, P5: 2.5, P6: 2, P7: 2.5, P8: 2.5,
   E1: 5, E2: 2, E3: 2.5, E4: 5, E5: 2.5, E6: 2.5, E7: 1, E8: 5,
   G1: 10, G2: 2, G3: 1, G4: 5, G5: 5, G6: 10, G7: 1,
 };
@@ -145,15 +145,15 @@ const RUTINA = {
       ]},
       { nombre: "Superserie A · 75 seg", ejercicios: [
         { id: "P2", nombre: "Press inclinado en Smith (30°)", series: 3, reps: "10 reps", pesoRef: "17.5 kg (barra + discos)", ss: "A" },
-        { id: "P3", nombre: "Elevación lateral en polea baja a 1 brazo", series: 3, reps: "12 c/brazo", pesoRef: "5 kg", ss: "A" },
+        { id: "P3", nombre: "Elevación lateral a 1 brazo con mancuerna", series: 3, reps: "12 c/brazo", pesoRef: "4 kg", ss: "A" },
       ]},
       { nombre: "Superserie B · 60 seg", ejercicios: [
-        { id: "P4", nombre: "Peck deck (aperturas en máquina)", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
+        { id: "P4", nombre: "Aperturas en banco plano con mancuernas", series: 3, reps: "12 reps", pesoRef: "12 kg c/u", ss: "B" },
         { id: "P5", nombre: "Curl en banco Scott con barra Z", series: 3, reps: "10 reps", pesoRef: "15 kg", ss: "B" },
       ]},
-      { nombre: "Superserie C · 60 seg", ejercicios: [
-        { id: "P6", nombre: "Curl inclinado con mancuernas (banco 45°)", series: 3, reps: "10 reps", pesoRef: "8 kg c/u", ss: "C" },
-        { id: "P7", nombre: "Curl martillo en polea con soga", series: 3, reps: "12 reps", pesoRef: "10 kg", ss: "C" },
+      { nombre: "Bíceps · 60 seg entre series", ejercicios: [
+        { id: "P6", nombre: "Curl inclinado con mancuernas (banco 45°)", series: 3, reps: "10 reps", pesoRef: "8 kg c/u" },
+        { id: "P7", nombre: "Curl martillo en polea con soga", series: 3, reps: "12 reps", pesoRef: "10 kg" },
       ]},
       { nombre: "Core · 30 seg", ejercicios: [
         { id: "P8", nombre: "Pallof press", series: 3, reps: "10 c/lado", pesoRef: "7.5 kg", ss: "D" },
@@ -197,18 +197,18 @@ const RUTINA = {
         { id: "G1", nombre: "Prensa (pausa 1 seg abajo)", series: 4, reps: "10 reps", pesoRef: "60 kg" },
       ]},
       { nombre: "Superserie A · 75 seg", ejercicios: [
-        { id: "G2", nombre: "Sentadilla búlgara con mancuernas", series: 3, reps: "8 c/pierna", pesoRef: "8 kg c/u", ss: "A" },
+        { id: "G2", nombre: "Estocada fija con mancuernas (una pierna a la vez)", series: 3, reps: "8 c/pierna", pesoRef: "8 kg c/u", ss: "A" },
         { id: "G3", nombre: "Camilla isquiotibiales", series: 3, reps: "12 reps", pesoRef: "4 ladrillos", ss: "A" },
       ]},
-      { nombre: "Superserie B · 75 seg", ejercicios: [
-        { id: "G4", nombre: "Hip thrust", series: 3, reps: "12 reps", pesoRef: "30 kg", ss: "B" },
-        { id: "G5", nombre: "Extensión de cuádriceps (pausa arriba)", series: 3, reps: "12 reps", pesoRef: "25 kg", ss: "B" },
+      { nombre: "Glúteo y cuádriceps · 60 seg entre series", ejercicios: [
+        { id: "G4", nombre: "Hip thrust", series: 3, reps: "12 reps", pesoRef: "10 kg" },
+        { id: "G5", nombre: "Extensión de cuádriceps (pausa arriba)", series: 3, reps: "12 reps", pesoRef: "25 kg" },
       ]},
-      { nombre: "Superserie C · 45 seg", ejercicios: [
-        { id: "G6", nombre: "Gemelo en prensa", series: 3, reps: "15 reps", pesoRef: "60 kg", ss: "C" },
-        { id: "G7", nombre: "Aductor en máquina", series: 3, reps: "15 reps", pesoRef: "4 ladrillos", ss: "C" },
+      { nombre: "Gemelo y aductor · 30-45 seg entre series", ejercicios: [
+        { id: "G6", nombre: "Gemelo en máquina", series: 3, reps: "15 reps", pesoRef: "80 kg" },
+        { id: "G7", nombre: "Aductor en máquina", series: 3, reps: "15 reps", pesoRef: "4 ladrillos" },
       ]},
-      { nombre: "Core · 30 seg", ejercicios: [
+      { nombre: "Core · superserie · 30 seg", ejercicios: [
         { id: "G8", nombre: "Crunch inverso en banco", series: 3, reps: "12 reps", pesoRef: "—", ss: "D" },
         { id: "G9", nombre: "Plancha lateral con elevación de cadera", series: 3, reps: "10 c/lado", pesoRef: "—", ss: "D" },
       ]},
